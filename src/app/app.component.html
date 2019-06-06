@@ -1,0 +1,55 @@
+<div class="container-fluid" >
+  <ngx-spinner
+            bdColor="rgba(51, 51, 51, 0.8)"
+            size="medium"
+            color="#dd8f44"
+            type="line-scale-pulse-out-rapid">
+    </ngx-spinner>
+  <div fxLayout="row" fxLayout.xs="column" *ngIf="currentUser" >
+    <header class="blog-header py-3 ">
+      <div class="row  justify-content-between align-items-center">
+
+        <div class="col-12 text-center">
+          <img src="../assets/image/logo.png" width="100" >
+          <h5 mat-line>Instituto Mexicano de Normalización y Certificación, A.C.</h5>
+          <div fxShow="true" fxHide.lt-md="true" >
+            <!-- The following menu items will be hidden on both SM and XS screen sizes -->
+            <div class="btn-group" mdbDropdown>
+              <mdb-badge pill="true" mdbDropdownToggle classInside="dropdown-toggle" class="waves-effect header-user" mdbWavesEffect>
+                <img src="../assets/image/logo.png" alt=""
+                     class="img-fluid rounded-circle z-depth-0" style="height: 25px;width: 25px;">
+                <label class="pl-2 pt-2 pr-2">{{currentUser.NOMBRE}}</label>
+              </mdb-badge>
+
+              <div class="dropdown-menu ">
+                <a class="dropdown-item" href="" routerLink="/perfil"><mdb-icon fas icon="user-cog" size="1x" class="blue-grey-text" aria-hidden="true"></mdb-icon> Perfil</a>
+                <div class="divider dropdown-divider"></div>
+                <a class="dropdown-item" href="" routerLink="/login">
+                  <mdb-icon fas icon="power-off" size="1x" class="red-text" aria-hidden="true"></mdb-icon> Cerrar Sesión
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <div class="nav-scroller py-1">
+      <nav class="nav d-flex justify-content-center" fxShow="true" fxHide.lt-md="true">
+        <a class="p-2 border-right" href="" routerLink="/" routerLinkActive="active" ><i class="fa fa-home fa-lg" ></i> Inicio</a>
+        <a class="p-2 border-right" href=""  routerLinkActive="active"><i class="fa fa-handshake fa-lg"></i> Servicios Contratados</a>
+        <a class="p-2 border-right" href=""  routerLinkActive="active"><i class="fa fa-graduation-cap  fa-lg"></i> Cursos Programados</a>
+        <a class="p-2 " href="#"><i class="fa fa-usd   fa-lg"></i> Cotizaciones</a>
+      </nav>
+    </div>
+  </div>
+  <div class="container-fluid">
+
+      <main >
+        <router-outlet #routerOutlet="outlet" (activate)="onActivate($event)"></router-outlet>
+      </main>
+
+  </div>
+
+</div>

@@ -1,0 +1,82 @@
+<mdb-card style="width: 350px;" class="mx-auto mt-5 mb-5" wider>
+
+  <!--Card image-->
+  <div class="bg-primary white-text text-center py-4  gradient-card-header imnc-gradient">
+    <div class="avatar mx-auto">
+      <img src="../../../assets/image/logo.png" class="logo-shadow w-50" >
+    </div>
+    <p>Instituto Mexicano de Normalización y Certificación, A.C</p>
+    <h4 class="card-header-title">Bienvenido</h4>
+  </div>
+  <!--/Card image-->
+
+
+  <!--Card content-->
+  <mdb-card-body >
+
+    <!-- Form -->
+      <form class=" text-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field class="w-100">
+            <input matInput  type="text" formControlName="username"  placeholder="Dirección de Correo" />
+            <mat-error *ngIf="f.username.invalid && (f.username.dirty || f.username.touched)" >
+              Dirección de correo inválida
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="w-100">
+            <input matInput type="password" formControlName="password"  placeholder="Contraseña" />
+            <mat-error  *ngIf="f.password.invalid && (f.password.dirty || f.password.touched)" >
+              La contraseña es <strong>requerida</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      <div class="d-flex justify-content-around">
+        <div>
+          <!-- Forgot password -->
+          <a href="">Olvidó la Contraseña?</a>
+        </div>
+      </div>
+
+      <!-- Sign in button -->
+
+      <button  mat-raised-button color="imnc"  [disabled]="loading" class="btn btn-block mt-3"  type="submit">
+        <div class="d-flex justify-content-center">
+        <span *ngIf="!loading">Acceder</span>
+        <span *ngIf="loading">Verificando datos</span>
+        </div>
+      </button>
+        <br>
+        <div *ngIf="loguinError" class="text-center alert alert-danger" >
+           <strong>{{loguinError}}</strong>
+        </div>
+
+      <!-- Register -->
+      <p>
+      </p>
+
+      <!-- Social login -->
+      <p>or sign in with:</p>
+      <a type="button" class="btn-floating btn-fb btn-sm">
+        <mdb-icon fab icon="facebook"></mdb-icon>
+      </a>
+      <a type="button" class="btn-floating btn-tw btn-sm">
+        <mdb-icon fab icon="twitter"></mdb-icon>
+      </a>
+      <a type="button" class="btn-floating btn-li btn-sm">
+        <mdb-icon fab icon="linkedin"></mdb-icon>
+      </a>
+      <a type="button" class="btn-floating btn-git btn-sm">
+        <mdb-icon fab icon="heart"></mdb-icon>
+      </a>
+
+    </form>
+    <!-- Form -->
+
+  </mdb-card-body>
+
+</mdb-card>
+<!-- Material form login -->

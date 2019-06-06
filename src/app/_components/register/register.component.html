@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <div class="card flex-md-row mb-4 shadow-sm ">
+    <div class="card-body d-flex flex-column ">
+      <div class="text-center">
+        <div class="card-header" style="background: white;">
+          <img class="" src="assets/image/logob.png" alt="" width="200">
+          <h5 class="h5 mb-3 font-weight-normal" style="color: #7e4808">Instituto Mexicano de Normalización y Certificación, A.C.</h5>
+        </div>
+        <div class="card-body" *ngIf="!error">
+          <div class="row" *ngIf="cliente.TOTAL < total">
+            <div class="col">
+              <div class="jumbotron p-3 p-md-5 text-black rounded back-claro text-left ">
+                <h5>Bienvenido </h5>
+
+                <h2>{{ cliente.NOMBRE }}</h2>
+                <span *ngIf="loading" class="text-sm-left"> Cargando datos del cliente
+                    <div  class="spinner-grow spinner-grow-sm " role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                   </span>
+                <p class="text-justify">
+                  Al registro de usuarios para de los clientes del IMNC, una vez registrado en esta página podrá monitoriar todos los servicios contratados con el instituto.
+                </p>
+                <div class="text-justify">
+                  La cantidad total de usuarios registrados <div class="badge badge-dark">{{cliente.TOTAL}} / <strong>{{total}}</strong></div>
+                </div>
+                <br>
+                <a href="#" (click)=" logout(true)" class="btn btn-primary" *ngIf="cliente.TOTAL>0">Ir al Login</a>
+              </div>
+              <div class="alert alert-warning" *ngIf="response_error">
+                <strong>{{response_error}}</strong>
+              </div>
+              <div class="alert alert-success" *ngIf="success">
+                <strong>Exito! ha sido registrado el usuario</strong>
+              </div>
+            </div>
+            <div class="col">
+              <div class="alert alert-dark">
+                <strong>Registrarse aquí por favor!</strong>
+              </div>
+              <div class="card align-content-center text-left">
+                <div class="card-bod d-flex flex-column">
+                  <form [formGroup]="registerForm">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label> Nombre <span class="text-danger">*</span></label>
+                        <input type="text" formControlName="nombre" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" />
+                        <div *ngIf="submitted && f.nombre.errors" class="invalid-feedback">
+                          <div *ngIf="f.nombre.errors.required">Complete este campo</div>
+                          <div *ngIf="f.nombre.errors.minlength">Debe tener 4 caracteres como mínimo</div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label> Usuario <span class="text-danger">*</span></label>
+                        <input type="text" formControlName="usuario" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.usuario.errors }" />
+                        <div *ngIf="submitted && f.usuario.errors" class="invalid-feedback">
+                          <div *ngIf="f.usuario.errors.required">Complete este campo</div>
+                          <div *ngIf="f.usuario.errors.minlength">Debe tener 4 caracteres como mínimo</div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label> Contraseña <span class="text-danger">*</span></label>
+                        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                          <div *ngIf="f.password.errors.required">Complete este campo</div>
+                          <div *ngIf="f.password.errors.minlength">Debe tener 4 caracteres como mínimo</div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label> Confirmar Contraseña <span class="text-danger">*</span></label>
+                        <input type="password" formControlName="confirmPass" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPass.errors }" />
+                        <div *ngIf="submitted && f.confirmPass.errors" class="invalid-feedback">
+                          <div *ngIf="f.confirmPass.errors.required">Complete este campo</div>
+                          <div *ngIf="f.confirmPass.errors.notsame">Las Contraseñas no son iguales</div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label> Correo Electrónico <span class="text-danger">*</span></label>
+                        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                          <div *ngIf="f.email.errors.required">Complete este campo</div>
+                          <div *ngIf="f.email.errors.email">Correo Electrónico inválido</div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <div class="form-group">
+                        <button type="button" class="btn " (click)="resetForm()">Cancelar</button>
+                        <button [disabled]="loading" class="btn btn-primary " style="margin-left: 10px;" (click)="onSubmit()">
+                          <span>Guardar </span>
+                          <div *ngIf="loading" class="spinner-grow float-right" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </button>
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="jumbotron p-3 p-md-5 text-black rounded text-left " *ngIf="cliente.TOTAL>=total">
+            <h2>{{ cliente.NOMBRE }}</h2>
+            <h5>Ha concluido el proceso de registro de usuarios</h5>
+
+           <a href="#" routerLink="/login" class="btn btn-primary">Ir al Login</a>
+          </div>
+
+
+
+        </div>
+        <div class="alert alert-danger" *ngIf="error">
+          <strong>Error!</strong> No puede registrarse, contacte con el IMNC. <a href="#" routerLink="/login" class="alert-link">Autenticarse</a>.
+        </div>
+        <div class="card-footer text-muted">
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
