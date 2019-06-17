@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   //API: 'http://apituya.com/api'
-  API: 'http://localhost:8888',
+  API: 'http://localhost:3000',
   PERFIL:'APP',
   resourceToken: 'http://apinube.com/imnc/siec2.0/api.imnc/imnc'
 };

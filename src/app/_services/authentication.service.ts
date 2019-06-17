@@ -39,7 +39,7 @@ export class AuthenticationService {
     }
 
     private  handleSuccess(response: any): Promise<any> {
-        if (response.response)
+        if (response.result)
         {
             let user: User = new User();
             user = response.data;

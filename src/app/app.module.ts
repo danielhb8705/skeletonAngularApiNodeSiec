@@ -14,16 +14,19 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule, MatMenuModule, MatProgressBarModule, MatSelectModule,
-  MatSidenavModule, MatSlideToggleModule, MatStepperModule, MatToolbarModule
+  MatSidenavModule, MatSlideToggleModule, MatStepperModule, MatToolbarModule,MatTableModule
 } from "@angular/material";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AuthenticationService, NavigationService, UserService} from "./_services";
+import {AuthenticationService, NavigationService, UserService, DatoscoiService} from "./_services";
 import {JwtInterceptor} from "./_helpers/jwt.interceptor";
 import { LayoutModule } from '@angular/cdk/layout';
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ErrorInterceptor} from "./_helpers/error.interceptor";
 import {RegisterComponent} from "./_components/register/register.component";
 import { ProfileComponent } from './_components/profile/profile.component';
+import { BalanzasComponent } from './_components/balanzas/balanzas.component';
+import { BalanzaxdptoComponent } from './_components/balanzaxdpto/balanzaxdpto.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,9 @@ import { ProfileComponent } from './_components/profile/profile.component';
     LoginComponent,
     HomeComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    BalanzasComponent,
+    BalanzaxdptoComponent
   ],
   imports: [
     BrowserModule,
@@ -59,8 +64,10 @@ import { ProfileComponent } from './_components/profile/profile.component';
     ReactiveFormsModule,
     LayoutModule,
     NgxSpinnerModule,
+    MatDatepickerModule,
+	MatTableModule,
   ],
-  providers: [AuthenticationService,NavigationService,UserService,
+  providers: [AuthenticationService,NavigationService,UserService,DatoscoiService,
               { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
   bootstrap: [AppComponent]
