@@ -27,6 +27,7 @@ import {RegisterComponent} from "./_components/register/register.component";
 import { ProfileComponent } from './_components/profile/profile.component';
 import { BalanzasComponent } from './_components/balanzas/balanzas.component';
 import { BalanzaxdptoComponent } from './_components/balanzaxdpto/balanzaxdpto.component';
+import { ErXCcXDepartamentoComponent } from './_components/er-x-cc-x-departamento/er-x-cc-x-departamento.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { BalanzaxdptoComponent } from './_components/balanzaxdpto/balanzaxdpto.c
     RegisterComponent,
     ProfileComponent,
     BalanzasComponent,
-    BalanzaxdptoComponent
+    BalanzaxdptoComponent,
+    ErXCcXDepartamentoComponent
   ],
   imports: [
     BrowserModule,

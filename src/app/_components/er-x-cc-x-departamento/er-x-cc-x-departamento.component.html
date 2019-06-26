@@ -1,0 +1,343 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      Estado de resultados por centro de costo por departamento
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+      <mat-form-field>
+          <input matInput [matDatepicker]="dp" placeholder="Seleccione Mes y Año" [formControl]="date">
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp
+                          startView="year"
+                          (yearSelected)="chosenYearHandler($event)"
+                          (monthSelected)="chosenMonthHandler($event, dp)"
+                          panelClass="example-month-picker">
+          </mat-datepicker>
+      </mat-form-field>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+      <mat-form-field style="align-self: center ; ">
+        <mat-label>Departamentos</mat-label>
+        <mat-select [(ngModel)]="selectedDepto" name="departamentos" (selectionChange)="ChangeSelect($event)">
+          <mat-option *ngFor="let departamento of departamentos" [value]="departamento.DEPTO">
+            {{departamento.NOMBRE}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+     
+       
+          <div class='example-container mat-elevation-z8'>
+            <mat-card-subtitle style="text-align: center; font-weight: bold;"> Tabla de Ventas</mat-card-subtitle>
+              <table mat-table [dataSource]='dataSource'>
+                  <ng-container matColumnDef='NUMCUENTA' sticky>
+                      <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+                      <td mat-cell *matCellDef='let element'>{{element.NUMCUENTA}}</td>
+                      <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef='NAMECUENTA' >
+                      <th mat-header-cell *matHeaderCellDef>Descripcion de la cuenta</th>
+                      <td mat-cell *matCellDef='let element'>{{element.NAMECUENTA}}</td>
+                      <td mat-footer-cell *matFooterCellDef>Ventas Netas</td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef='REAL'>
+                      <th mat-header-cell *matHeaderCellDef>Real Mes</th>
+                      <td mat-cell *matCellDef='let element'>{{element.REAL|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalVentas(1)|currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP'>
+                      <th mat-header-cell *matHeaderCellDef>Presupuesto Mes</th>
+                      <td mat-cell *matCellDef='let element'>{{element.PRESUP|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalVentas(2)|currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='REAL_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef>Real acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'>{{element.REAL_ACUM|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalVentas(3)|currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef>Presupuesto acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'>{{element.PRESUP_ACUM|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalVentas(4)|currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ANHIO'>
+                    <th mat-header-cell *matHeaderCellDef>Presupuesto del año</th>
+                    <td mat-cell *matCellDef='let element'>{{element.PRESUP_ANHIO|currency}}</td>
+                    <td mat-footer-cell *matFooterCellDef>{{getTotalVentas(5)|currency}}</td>
+                  </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef='displayedColumns; sticky: true'></tr>
+                  <tr mat-row *matRowDef='let row; columns: displayedColumns;'></tr>
+                  <tr mat-footer-row *matFooterRowDef='displayedColumns;' ></tr>
+            </table>
+           
+          <br>
+            <mat-card-subtitle style="text-align: center; font-weight: bold;"> Tabla de Sueldos y Gastos</mat-card-subtitle>
+                <table mat-table [dataSource]='dataSource1'>
+                  <ng-container matColumnDef='NUMCUENTA' sticky>
+                      <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+                      <td mat-cell *matCellDef='let element'>{{element.NUMCUENTA}}</td>
+                      <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef='NAMECUENTA' >
+                      <th mat-header-cell *matHeaderCellDef>Descripcion de la cuenta</th>
+                      <td mat-cell *matCellDef='let element'>{{element.NAMECUENTA}}</td>
+                      <td mat-footer-cell *matFooterCellDef>Sueldos y Gastos</td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef='REAL'>
+                      <th mat-header-cell *matHeaderCellDef>Real Mes</th>
+                      <td mat-cell *matCellDef='let element'>{{element.REAL|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalGastos(1) | currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP'>
+                      <th mat-header-cell *matHeaderCellDef>Presupuesto Mes</th>
+                      <td mat-cell *matCellDef='let element'>{{element.PRESUP|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalGastos(2)| currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='REAL_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef>Real acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'>{{element.REAL_ACUM|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalGastos(3)| currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef>Presupuesto acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'>{{element.PRESUP_ACUM|currency}}</td>
+                      <td mat-footer-cell *matFooterCellDef>{{getTotalGastos(4)|currency}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ANHIO'>
+                    <th mat-header-cell *matHeaderCellDef>Presupuesto del año</th>
+                    <td mat-cell *matCellDef='let element'>{{element.PRESUP_ANHIO|currency}}</td>
+                    <td mat-footer-cell *matFooterCellDef>{{getTotalGastos(5)|currency}}</td>
+                  </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef='displayedColumns; sticky: true'></tr>
+                  <tr mat-row *matRowDef='let row; columns: displayedColumns;'></tr>
+                  <tr mat-footer-row *matFooterRowDef='displayedColumns;' ></tr>
+              </table>
+              <br>
+              <mat-card-subtitle style="text-align: center; font-weight: bold;"> Tabla Resumen</mat-card-subtitle>
+                <table mat-table [dataSource]='dataSource2'>
+                  <ng-container matColumnDef='NUMCUENTA' sticky>
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Cuenta</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.NUMCUENTA}}</td>
+                      
+                  </ng-container>
+                  <ng-container matColumnDef='NAMECUENTA' >
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Descripcion de la cuenta</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.NAMECUENTA}}</td>
+                      
+                  </ng-container>
+                  
+                  <ng-container matColumnDef='REAL'>
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Real Mes</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.REAL|currency}}</td>
+                     
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP'>
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Presupuesto Mes</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.PRESUP | currency}}</td>
+                      
+                  </ng-container>
+                  <ng-container matColumnDef='REAL_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Real acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.REAL_ACUM|currency}}</td>
+                      
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ACUM'>
+                      <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Presupuesto acumulado en el año</th>
+                      <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.PRESUP_ACUM|currency}}</td>
+                      
+                  </ng-container>
+                  <ng-container matColumnDef='PRESUP_ANHIO' >
+                    <th mat-header-cell *matHeaderCellDef  style="font-weight: bold">Presupuesto del año</th>
+                    <td mat-cell *matCellDef='let element'  style="font-weight: bold">{{element.PRESUP_ANHIO|currency}}</td>
+                    
+                  </ng-container>
+                  
+                  <tr mat-header-row *matHeaderRowDef='displayedColumns; sticky: true'></tr>
+                  <tr mat-row *matRowDef='let row; columns: displayedColumns;'></tr>
+                 
+              </table>
+
+              </div>
+            
+              
+      
+          
+      
+      
+  </mat-card-content>
+  
+ 
+</mat-card>
+
+<!--
+
+<mat-card>
+  <mat-form-field>
+      <input matInput [matDatepicker]="dp" placeholder="Seleccione Mes y Año" [formControl]="date">
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp
+                      startView="year"
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dp)"
+                      panelClass="example-month-picker">
+      </mat-datepicker>
+  </mat-form-field>
+  <div class='example-container mat-elevation-z8'>
+    <table mat-table [dataSource]='dataSource' >
+      <ng-container matColumnDef='NUMCUENTA' sticky>
+          <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+          <td mat-cell *matCellDef='let element'>{{element.NUMCUENTA}}</td>
+      </ng-container>
+      <ng-container matColumnDef='NAMECUENTA' sticky>
+          <th mat-header-cell *matHeaderCellDef>Descripcion de la cuenta</th>
+          <td mat-cell *matCellDef='let element'>{{element.NAMECUENTA}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_JAN19'>
+          <th mat-header-cell *matHeaderCellDef>Real Enero19</th>
+          <td mat-cell *matCellDef='let element'>{{element.REAL_JAN19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_JAN19'>
+          <th mat-header-cell *matHeaderCellDef>Presupuesto Enero19</th>
+          <td mat-cell *matCellDef='let element'>{{element.PRESUP_JAN19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_FEB19'>
+          <th mat-header-cell *matHeaderCellDef>Real Febrero19</th>
+          <td mat-cell *matCellDef='let element'>{{element.REAL_FEB19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_FEB19'>
+          <th mat-header-cell *matHeaderCellDef>Presupuesto Febrero19</th>
+          <td mat-cell *matCellDef='let element'>{{element.PRESUP_FEB19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_MAR19'>
+        <th mat-header-cell *matHeaderCellDef>Real Marzo19</th>
+        <td mat-cell *matCellDef='let element'>{{element.REAL_MAR19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_MAR19'>
+        <th mat-header-cell *matHeaderCellDef>Presupuesto Marzo19</th>
+        <td mat-cell *matCellDef='let element'>{{element.PRESUP_MAR19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_APR19'>
+        <th mat-header-cell *matHeaderCellDef>Real Abril19</th>
+        <td mat-cell *matCellDef='let element'>{{element.REAL_APR19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_APR19'>
+        <th mat-header-cell *matHeaderCellDef>Presupuesto Abril19</th>
+        <td mat-cell *matCellDef='let element'>{{element.PRESUP_APR19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_MAY19'>
+      <th mat-header-cell *matHeaderCellDef>Real Mayo19</th>
+      <td mat-cell *matCellDef='let element'>{{element.REAL_MAY19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_MAY19'>
+      <th mat-header-cell *matHeaderCellDef>Presupuesto Mayo19</th>
+      <td mat-cell *matCellDef='let element'>{{element.PRESUP_MAY19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_JUN19'>
+      <th mat-header-cell *matHeaderCellDef>Real Junio19</th>
+      <td mat-cell *matCellDef='let element'>{{element.REAL_JUN19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_JUN19'>
+      <th mat-header-cell *matHeaderCellDef>Presupuesto Junio19</th>
+      <td mat-cell *matCellDef='let element'>{{element.PRESUP_JUN19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_JUL19'>
+    <th mat-header-cell *matHeaderCellDef>Real Julio19</th>
+    <td mat-cell *matCellDef='let element'>{{element.REAL_JUL19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_JUL19'>
+    <th mat-header-cell *matHeaderCellDef>Presupuesto Julio19</th>
+    <td mat-cell *matCellDef='let element'>{{element.PRESUP_JUL19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_AUG19'>
+    <th mat-header-cell *matHeaderCellDef>Real Agosto19</th>
+    <td mat-cell *matCellDef='let element'>{{element.REAL_AUG19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_AUG19'>
+    <th mat-header-cell *matHeaderCellDef>Presupuesto Agosto19</th>
+    <td mat-cell *matCellDef='let element'>{{element.PRESUP_AUG19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='REAL_SEP19'>
+  <th mat-header-cell *matHeaderCellDef>Real Septiembre19</th>
+  <td mat-cell *matCellDef='let element'>{{element.REAL_SEP19|currency}}</td>
+      </ng-container>
+      <ng-container matColumnDef='PRESUP_SEP19'>
+  <th mat-header-cell *matHeaderCellDef>Presupuesto Septiemre19</th>
+  <td mat-cell *matCellDef='let element'>{{element.PRESUP_SEP19|currency}}</td>
+      </ng-container>
+<ng-container matColumnDef='REAL_OCT19'>
+  <th mat-header-cell *matHeaderCellDef>Real Octubre19</th>
+  <td mat-cell *matCellDef='let element'>{{element.REAL_OCT19|currency}}</td>
+</ng-container>
+<ng-container matColumnDef='PRESUP_OCT19'>
+  <th mat-header-cell *matHeaderCellDef>Presupuesto Octubre19</th>
+  <td mat-cell *matCellDef='let element'>{{element.PRESUP_OCT19|currency}}</td>
+</ng-container>
+<ng-container matColumnDef='REAL_NOV19'>
+<th mat-header-cell *matHeaderCellDef>Real Noviembre19</th>
+<td mat-cell *matCellDef='let element'>{{element.REAL_NOV19|currency}}</td>
+</ng-container>
+<ng-container matColumnDef='PRESUP_NOV19'>
+<th mat-header-cell *matHeaderCellDef>Presupuesto Noviembre19</th>
+<td mat-cell *matCellDef='let element'>{{element.PRESUP_NOV19|currency}}</td>
+</ng-container>
+<ng-container matColumnDef='REAL_DEC19'>
+<th mat-header-cell *matHeaderCellDef>Real Diciembre19</th>
+<td mat-cell *matCellDef='let element'>{{element.REAL_DEC19|currency}}</td>
+</ng-container>
+<ng-container matColumnDef='PRESUP_DEC19' >
+<th mat-header-cell *matHeaderCellDef >Presupuesto Diciembre19</th>
+<td mat-cell *matCellDef='let element'>{{element.PRESUP_DEC19|currency}}</td>
+</ng-container>
+      <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
+      <tr mat-row *matRowDef='let row; columns: displayedColumns;'></tr>
+  </table>
+  </div>
+ 
+</mat-card>
+
+-->
+
+<!--
+<div class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+   
+    <ng-container matColumnDef="name" sticky>
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+   
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+
+    
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+
+   
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
+
+  
+    <ng-container matColumnDef="star"  stickyEnd>
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" style="width:1px;">
+        <mat-icon>more_vert</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+-->
